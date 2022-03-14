@@ -1,4 +1,4 @@
-# DiskRead v1.0
+# DiskRead
 
 ## What is DiskRead?
 
