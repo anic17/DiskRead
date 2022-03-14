@@ -31,6 +31,7 @@ DiskRead is a very light program (only 6 kB), it's really fast, powerful, portab
 It's also a good backup tool for your boot sector in case it gets corrupted or you want to restore it.
 
 
+
 **Copyright &copy; 2022 anic17 Software**
 
 <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fanic17%2FDiskRead&count_bg=%23FFFFFF&title_bg=%23FFFFFF&icon=&icon_color=%23FFFFFF&title=hits&edge_flat=false" height=0 width=0>
