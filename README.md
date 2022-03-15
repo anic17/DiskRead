@@ -31,6 +31,10 @@ Values will be rounded up to the nearest multiple of 512.
 DiskRead is a very light program (only 6 kB), it's really fast, powerful, portable and easy to use.
 It's also a good backup tool for your boot sector in case it gets corrupted or you want to restore it.
 
+## Article
+
+Here's an <a href="https://batch-man.com/diskread-read-raw-chunks-of-a-disk-or-a-file/">article</a> written on <a href="https://batch-man.com">Batch-Man</a> by me explaining more in-depth the tool.
+
 
 
 **Copyright &copy; 2022 anic17 Software**
