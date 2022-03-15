@@ -10,7 +10,7 @@ Usage:
 `diskread <drive | file> [read count] [export <file>]`
 
 Examples:  
-`diskread \\\\.\\PhysicalDrive0 512 export bootsect.bak`  
+`diskread \\.\PhysicalDrive0 512 export bootsect.bak`  
 Reads first 512 bytes from physical drive 0 and exports it.
 
 `diskread file.txt 40`  
