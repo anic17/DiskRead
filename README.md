@@ -21,10 +21,10 @@ The number of bytes read is returned in case of success, or an error code on fai
 
 DiskRead can be used for either hexadecimal dumping and a backup tool for your boot sector.
 
-Note: Due to Windows limitations, disk reading is performed in chunks of 512 bytes.
+**Note:** Due to Windows limitations, disk reading is performed in chunks of 512 bytes.
 Values will be rounded up to the nearest multiple of 512.
 
-Second note: Reading from a disk/partition requires administrator privileges. You’ll get the error "`Access is denied. (0x5)`" if you don’t have them. 
+**Second note:** Reading from a disk/partition requires administrator privileges. You’ll get the error "`Access is denied. (0x5)`" if you don’t have them. 
 
 ## Why use DiskRead?
 
