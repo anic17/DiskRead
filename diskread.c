@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
     }
 
     // Variable declarations and memory allocation
-    FILE *export;
+    FILE *export_;
     /*
         There's a reason I'm using regular FILE structure with fopen() and fwrite() instead of
         HANDLE with CreateFile() and WriteFile().
@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
     }
 
     buf = (PUCHAR)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(PUCHAR) * bufsize);     // Allocate memory for the buffer
-    device = (PUCHAR)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(PUCHAR) * MAX_PATH); // Allocate memory for the device name
+    device = (LPSTR)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(LPSTR) * MAX_PATH); // Allocate memory for the device name
     strncpy_n(device, argv[1], MAX_PATH);
     if (GetFileAttributes(device) & FILE_ATTRIBUTE_DEVICE && (bufsize % 512) != 0)
     {
@@ -97,8 +97,8 @@ int main(int argc, char *argv[])
         if (!strcmp(strlower_n(argv[3]), "export") && argv[4] != NULL && argc < 6)
         {
 
-            export = fopen(argv[4], "wb");
-            if (!export)
+            export_ = fopen(argv[4], "wb");
+            if (!export_)
             {
                 last_err = GetLastError();
                 printf("%s (0x%x)\n", ErrorMessage(last_err), last_err);
@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
         }
         if (export_mode)
         {
-            fwrite(buf, sizeof(char), bytes_read, export);
+            fwrite(buf, sizeof(char), bytes_read, export_);
         }
     }
     else
@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
     }
     if (export_mode)
     {
-        if (fclose(export) != EOF)
+        if (fclose(export_) != EOF)
         {
             printf("\n%d bytes of '%s' exported successfully into '%s'.\n", bytes_read, device, argv[4]);
         }
