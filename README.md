@@ -33,7 +33,7 @@ It's also a good backup tool for your boot sector in case it gets corrupted or y
 
 ## Article
 
-Here's an <a href="https://batch-man.com/diskread-read-raw-chunks-of-a-disk-or-a-file/">article</a> written on <a href="https://batch-man.com">Batch-Man</a> by me explaining more in-depth the tool.
+Here's an <a href="https://batch-man.com/diskread-read-raw-chunks-of-a-disk-or-a-file/">article</a> written on <a href="https://batch-man.com">Batch-Man</a> by me explaining more in-depth DiskRead.
 
 
 
