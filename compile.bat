@@ -7,4 +7,4 @@
 SET src=diskread.c
 SET out=diskread.exe
 
-g++ %src% -o %out% -O2
+gcc %src% -o %out% -O2
