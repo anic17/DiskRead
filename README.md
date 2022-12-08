@@ -18,14 +18,12 @@ Prints 40 bytes from file.txt, starting to read at the 10th byte.
 ### Return code
  On success, the number of bytes read is returned, or a negative error value on failure.  
 
-DiskRead can be used for both hexadecimal dumping and a boot sector backup tool.
-
 Note: Due to Windows limitations, both disk reading and disk offset are performed in chunks of 512 bytes.  
       Values will be rounded up to the nearest multiple of 512.  
 
 ## Why use DiskRead?
 
-DiskRead is a very light program (only 6 kB), it's really fast, powerful, portable and easy to use.
+DiskRead is a tiny program (only 9 kB), it's really fast, powerful, portable and easy to use. Works on Windows XP and higher.
 It's also a good backup tool for your boot sector in case it gets corrupted or you want to restore it.
 
 ## Article
