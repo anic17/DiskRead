@@ -6,25 +6,22 @@ DiskRead is a program that allows you to read raw chunks of a disk or a file.
 
 ## Usage 
 
-Usage:  
-`diskread <drive | file> [read count] [export <file>]`
+`diskread <drive | file> [read count] [offset] [export <file>]`
 
-Examples:  
-`diskread \\.\PhysicalDrive0 512 export bootsect.bak`  
-Reads first 512 bytes from physical drive 0 and exports it.
+### Examples
+ `diskread \\.\PhysicalDrive0 512 0 export bootsect.bak`  
+Reads the first 512 bytes from physical drive 0 and writes them to 'bootsect.bak'.
 
-`diskread file.txt 40`  
-Reads 40 bytes from file.txt and prints it in hexadecimal.
+ `diskread file.txt 40 10`  
+Prints 40 bytes from file.txt, starting to read at the 10th byte.
 
-Return code:  
-The number of bytes read is returned in case of success, or an error code on failure.
+### Return code
+ On success, the number of bytes read is returned, or a negative error value on failure.  
 
-DiskRead can be used for either hexadecimal dumping and a backup tool for your boot sector.
+DiskRead can be used for both hexadecimal dumping and a boot sector backup tool.
 
-**Note:** Due to Windows limitations, disk reading is performed in chunks of 512 bytes.
-Values will be rounded up to the nearest multiple of 512.
-
-**Second note:** Reading from a disk/partition requires administrator privileges. You’ll get the error "`Access is denied. (0x5)`" if you don’t have them. 
+Note: Due to Windows limitations, both disk reading and disk offset are performed in chunks of 512 bytes.  
+      Values will be rounded up to the nearest multiple of 512.  
 
 ## Why use DiskRead?
 
@@ -34,8 +31,6 @@ It's also a good backup tool for your boot sector in case it gets corrupted or y
 ## Article
 
 Here's an <a href="https://batch-man.com/diskread-read-raw-chunks-of-a-disk-or-a-file/">article</a> written on <a href="https://batch-man.com">Batch-Man</a> by me explaining more in-depth DiskRead.
-
-
 
 **Copyright &copy; 2022 anic17 Software**
 
