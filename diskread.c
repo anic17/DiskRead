@@ -6,13 +6,6 @@
 #include <windows.h>
 #include <math.h> // log()
 
-#ifndef __bool_true_false_are_defined
-#define __bool_true_false_are_defined
-#define bool int
-#define false 0
-#define true 1
-#endif
-
 char diskread_version[] = "3.0";
 /*
     Variable declarations.
@@ -127,7 +120,7 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    BOOL is_device = 0, loaded_device = false;
+    BOOLEAN is_device = FALSE, loaded_device = FALSE;
     DWORD bufsize = 512, last_err = 0;
     size_t bytes_per_line = 16, bytes_pl_temp = 0, substract_optimization = 0;
     LPSTR device, export_file, outbuffer;
@@ -143,8 +136,8 @@ int main(int argc, char *argv[])
     device = (LPSTR)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(LPSTR) * MAX_PATH);                    // Allocate memory for the device name
     export_file = (LPSTR)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(LPSTR) * MAX_PATH);               // Allocate memory for the export file name
 
-    bool show_offset = true;
-    bool export_mode = false;
+    BOOLEAN show_offset = TRUE;
+    BOOLEAN export_mode = FALSE;
 
     for (int i = 1; i < argc; i++)
     {
@@ -165,7 +158,7 @@ int main(int argc, char *argv[])
                     fprintf(stderr, "Error: %s (0x%lx)\n", ErrorMessage(last_err), last_err);
                     return -last_err;
                 }
-                export_mode = true;
+                export_mode = TRUE;
                 i++;
             }
             else
@@ -175,7 +168,7 @@ int main(int argc, char *argv[])
         }
         else if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--hideoffset"))
         {
-            show_offset = false;
+            show_offset = FALSE;
         }
         else if (!strcmp(argv[i], "-o") || !strcmp(argv[i], "--offset"))
         {
@@ -235,7 +228,7 @@ int main(int argc, char *argv[])
             if (!loaded_device)
             {
                 strncpy_n(device, argv[i], MAX_PATH);
-                loaded_device = true;
+                loaded_device = TRUE;
                 is_device = GetFileAttributes(device) & FILE_ATTRIBUTE_DEVICE;
             }
             else
