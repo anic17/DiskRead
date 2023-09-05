@@ -131,7 +131,6 @@ int main(int argc, char *argv[])
     char print_offset[32] = "\n[0x%08x] "; // Default offset size
     // Copy arguments to variables
 
-    outbuffer = (LPSTR)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, (5 * bytes_per_line + 32) * sizeof(char)); // Allocate space for the output buffer to improve performance
     buf = (PUCHAR)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(PUCHAR) * bufsize);                      // Allocate memory for the buffer
     device = (LPSTR)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(LPSTR) * MAX_PATH);                    // Allocate memory for the device name
     export_file = (LPSTR)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(LPSTR) * MAX_PATH);               // Allocate memory for the export file name
@@ -243,6 +242,9 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Error: No file specified");
         return 1;
     }
+    outbuffer = (LPSTR)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, (5 * bytes_per_line + 32) * sizeof(char)); // Allocate space for the output buffer to improve performance
+
+
     if (is_device && bufsize % 512)
     {
         fprintf(stderr, "Warning: Disk must be read in chunks of 512 bytes. Adding %lu bytes for padding.\n", 512 - (bufsize % 512));
