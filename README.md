@@ -42,7 +42,7 @@ DiskRead is a tiny and fast program, yet powerful, portable, and easy to use. It
 
 ## Contributing
 
-If you found a bug or want to add a new feature, don't hesitate to create a [pull request](https://github.com/anic17/DiskRead/pulls) or an [issue](https://github.com/anic17/DiskRead/issues).
+If you found a bug or want to add a new feature, don't hesitate to create a [pull request](https://github.com/anic17/DiskRead/pulls) or an [issue](https://github.com/anic17/DiskRead/issues)! Contributions are greatly appreciated.
 
 ## Article
 
