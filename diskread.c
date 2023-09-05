@@ -79,9 +79,38 @@ int hex_digits(LONG64 a)
     return ++c;
 }
 
-void Help()
+void help()
 {
-    printf("DiskRead v%s - Read a disk or a file in raw mode.\n\nUsage:\n diskread <drive | file> [-b <bytes per line>] [-e <export file>] [-h] [-o <offset>] [-s <read size>]\n\nSwitches:\n -b, --bytes <bytecount>  Change the number of bytes per line displayed\n -e, --export <file>      Export to a file\n -h, --hideoffset         Hide the offset display\n -o, --offset <offset>    Set a custom starting offset for the file\n -s, --size <read size>   Read a specific amount of bytes from the file\n\nExamples:\n diskread \\\\.\\PhysicalDrive0 -s 512 -o 0 -e bootsect.bak\n Reads the first 512 bytes from physical drive 0 and writes them to 'bootsect.bak' (a boot sector backup).\n\n diskread file.txt -s 40 -o 10 -h \n Prints 40 bytes from file.txt, starting to read at the 10th byte without displaying the offset.\n\nReturn code:\n On success, the number of bytes read is returned, or a negative error value on failure.\n\nDiskRead can be used for hexadecimal dumping and as a boot sector backup tool.\n\nNote: Due to Windows limitations, both disk reading and disk offset are performed in chunks of 512 bytes.\n      Values will be rounded up to the nearest multiple of 512.\n\nCopyright (c) 2023 anic17 Software\n", diskread_version);
+    printf(
+        "DiskRead v%s - Read a disk or a file in raw mode.\n"
+        "\n"
+        "Usage:\n"
+        " diskread <drive | file> [-b <bytes per line>] [-e <export file>] [-h] [-o <offset>] [-s <read size>]\n"
+        "\n"
+        "Switches:\n"
+        " -b, --bytes <bytecount>  Change the number of bytes per line displayed\n"
+        " -e, --export <file>      Export to a file\n"
+        " -h, --hideoffset         Hide the offset display\n"
+        " -o, --offset <offset>    Set a custom starting offset for the file\n"
+        " -s, --size <read size>   Read a specific amount of bytes from the file\n"
+        "\n"
+        "Examples:\n"
+        " diskread \\\\.\\PhysicalDrive0 -s 512 -o 0 -e bootsect.bak\n"
+        " Reads the first 512 bytes from physical drive 0 and writes them to 'bootsect.bak' (a boot sector backup).\n"
+        "\n"
+        " diskread file.txt -s 40 -o 10 -h \n"
+        " Prints 40 bytes from file.txt, starting to read at the 10th byte without displaying the offset.\n"
+        "\n"
+        "Return code:\n"
+        " On success, the number of bytes read is returned, or a negative error value on failure.\n"
+        "\n"
+        "DiskRead can be used for hexadecimal dumping and as a boot sector backup tool.\n"
+        "\n"
+        "Note: Due to Windows limitations, both disk reading and disk offset are performed in chunks of 512 bytes.\n"
+        "      Values will be rounded up to the nearest multiple of 512.\n"
+        "\n"
+        "Copyright (c) 2023 anic17 Software\n",
+        diskread_version);
 }
 
 void missing_param(char *s)
@@ -94,7 +123,7 @@ int main(int argc, char *argv[])
 {
     if (argc < 2 || !strcmp(argv[1], "--help") || !strcmp(argv[1], "/?"))
     {
-        Help();
+        help();
         return 0;
     }
 
