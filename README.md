@@ -21,7 +21,13 @@ DiskRead is a program that allows you to read raw chunks of a disk or a file.
  Set a custom starting offset for the file  
  
  `-s, --size <read size>`  
- Read a specific amount of bytes from the file  
+ Read a specific amount of bytes from the file. 512 bytes are read by default  
+
+ `-u, --uppercase`  
+ Display hexadecimal values in uppercase  
+
+ `-x, --hexadecimal`  
+ Only display the hexadecimal representation  
 
 ### Examples
  `diskread \\.\PhysicalDrive0 -s 512 -o 0 -e bootsect.bak`  
@@ -29,6 +35,9 @@ DiskRead is a program that allows you to read raw chunks of a disk or a file.
 
  `diskread file.txt -s 40 -o 10 -h`  
  Prints 40 bytes from file.txt, starting to read at the 10th byte without displaying the offset.
+
+`diskread image.png -x -u -b 12`  
+Prints only 512 bytes of image.png in uppercase hexadecimal, displaying 12 bytes per line.
 
 ### Return code
  On success, the number of bytes read is returned, or a negative error value on failure.
