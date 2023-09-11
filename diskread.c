@@ -78,15 +78,16 @@ void help()
         "DiskRead v%s - Read a disk or a file in raw mode.\n"
         "\n"
         "Usage:\n"
-        " diskread <drive | file> [-b <bytes per line>] [-e <export file>] [-h] [-o <offset>] [-s <read size>] [-u]\n"
+        " diskread <drive | file> [-b <bytes per line>] [-e <export file>] [-h] [-o <offset>] [-s <read size>] [-u] [-x]\n"
         "\n"
         "Switches:\n"
         " -b, --bytes <bytecount>  Change the number of bytes per line displayed\n"
         " -e, --export <file>      Export to a file\n"
         " -h, --hideoffset         Hide the offset display\n"
         " -o, --offset <offset>    Set a custom starting offset for the file\n"
-        " -s, --size <read size>   Read a specific amount of bytes from the file\n"
-        " -u, --uppercase          Display hexadecimal values in uppercase"
+        " -s, --size <read size>   Read a specific amount of bytes from the file. 512 bytes are read by default.\n"
+        " -u, --uppercase          Display hexadecimal values in uppercase\n"
+        " -x, --hexadecimal        Only display the hexadecimal representation\n"
         "\n"
         "Examples:\n"
         " diskread \\\\.\\PhysicalDrive0 -s 512 -o 0 -e bootsect.bak\n"
@@ -94,6 +95,9 @@ void help()
         "\n"
         " diskread file.txt -s 40 -o 10 -h \n"
         " Prints 40 bytes from file.txt, starting to read at the 10th byte without displaying the offset.\n"
+        "\n"
+        " diskread image.png -x -u -b 12 \n"
+        " Prints only 512 bytes of image.png in uppercase hexadecimal, displaying 12 bytes per line.\n"
         "\n"
         "Return code:\n"
         " On success, the number of bytes read is returned, or a negative error value on failure.\n"
@@ -138,6 +142,7 @@ int main(int argc, char *argv[])
     BOOLEAN show_offset = TRUE;
     BOOLEAN export_mode = FALSE;
     BOOLEAN use_caps = FALSE;
+    BOOLEAN only_hex = FALSE;
 
     for (int i = 1; i < argc; i++)
     {
@@ -173,6 +178,10 @@ int main(int argc, char *argv[])
         else if (!strcmp(argv[i], "-u") || !strcmp(argv[i], "--uppercase"))
         {
             use_caps = TRUE;
+        }
+        else if (!strcmp(argv[i], "-x") || !strcmp(argv[i], "--hexadecimal"))
+        {
+            only_hex = TRUE;
         }
         else if (!strcmp(argv[i], "-o") || !strcmp(argv[i], "--offset"))
         {
@@ -244,7 +253,7 @@ int main(int argc, char *argv[])
     }
 
     char print_offset[32] = "\n[0x%08x] "; // Default offset size
-    if(use_caps)
+    if (use_caps)
     {
         strncpy_n(print_offset, "\n[0x%08X] ", 11);
     }
@@ -308,19 +317,25 @@ int main(int argc, char *argv[])
                 putchar('\n');
             }
             substract_optimization = bytes_read - i;
+
             for (size_t k = 0; k < (((substract_optimization < bytes_per_line)) ? substract_optimization : bytes_per_line); k++)
             {
-                snprintf(outbuffer + strlen(outbuffer), (5 * bytes_per_line + 20) * sizeof(char), use_caps ? "%02X " : "%02x " , buf[i + k]); // Print the bytes
+                snprintf(outbuffer + strlen(outbuffer), (5 * bytes_per_line + 20) * sizeof(char), use_caps ? "%02X " : "%02x ", buf[i + k]); // Print the bytes
             }
+
             if (substract_optimization < bytes_per_line)
             {
                 memset(outbuffer + strlen(outbuffer), ' ', (bytes_per_line - substract_optimization) * 3); // Fill the print buffer with spaces in case the line is not completed
             }
             fputs(outbuffer, stdout); // Print the hexadecimal values
-            for (size_t k = 0; k < (((substract_optimization < bytes_per_line)) ? substract_optimization : bytes_per_line); k++)
+            if (!only_hex)
             {
-                putchar(buf[i + k] > 0x1f ? buf[i + k] : '.'); // Print the ASCII representation
+                for (size_t k = 0; k < (((substract_optimization < bytes_per_line)) ? substract_optimization : bytes_per_line); k++)
+                {
+                    putchar(buf[i + k] > 0x1f ? buf[i + k] : '.'); // Print the ASCII representation
+                }
             }
+
             i += bytes_per_line;
         }
     }
