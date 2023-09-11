@@ -5,7 +5,7 @@
 DiskRead is a program that allows you to read raw chunks of a disk or a file.
 
 ## Usage
- `diskread <drive | file> [-b <bytes per line>] [-e <export file>] [-h] [-o <offset>] [-s <read size>]`
+ `diskread <drive | file> [-b <bytes per line>] [-e <export file>] [-h] [-o <offset>] [-s <read size>] [-u] [-x]`
 
 ### Switches
  `-b, --bytes <bytecount>`  
