@@ -78,7 +78,7 @@ void help()
         "DiskRead v%s - Read a disk or a file in raw mode.\n"
         "\n"
         "Usage:\n"
-        " diskread <drive | file> [-b <bytes per line>] [-e <export file>] [-h] [-o <offset>] [-s <read size>]\n"
+        " diskread <drive | file> [-b <bytes per line>] [-e <export file>] [-h] [-o <offset>] [-s <read size>] [-u]\n"
         "\n"
         "Switches:\n"
         " -b, --bytes <bytecount>  Change the number of bytes per line displayed\n"
@@ -86,6 +86,7 @@ void help()
         " -h, --hideoffset         Hide the offset display\n"
         " -o, --offset <offset>    Set a custom starting offset for the file\n"
         " -s, --size <read size>   Read a specific amount of bytes from the file\n"
+        " -u, --uppercase          Display hexadecimal values in uppercase"
         "\n"
         "Examples:\n"
         " diskread \\\\.\\PhysicalDrive0 -s 512 -o 0 -e bootsect.bak\n"
@@ -128,15 +129,15 @@ int main(int argc, char *argv[])
     LONG64 strtoll_ret = 0;
     LARGE_INTEGER offset = {0}, sector_number = {0};
     HANDLE diskread = NULL;
-    char print_offset[32] = "\n[0x%08x] "; // Default offset size
     // Copy arguments to variables
 
-    buf = (PUCHAR)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(PUCHAR) * bufsize);                      // Allocate memory for the buffer
-    device = (LPSTR)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(LPSTR) * MAX_PATH);                    // Allocate memory for the device name
-    export_file = (LPSTR)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(LPSTR) * MAX_PATH);               // Allocate memory for the export file name
+    buf = (PUCHAR)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(PUCHAR) * bufsize);        // Allocate memory for the buffer
+    device = (LPSTR)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(LPSTR) * MAX_PATH);      // Allocate memory for the device name
+    export_file = (LPSTR)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(LPSTR) * MAX_PATH); // Allocate memory for the export file name
 
     BOOLEAN show_offset = TRUE;
     BOOLEAN export_mode = FALSE;
+    BOOLEAN use_caps = FALSE;
 
     for (int i = 1; i < argc; i++)
     {
@@ -168,6 +169,10 @@ int main(int argc, char *argv[])
         else if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--hideoffset"))
         {
             show_offset = FALSE;
+        }
+        else if (!strcmp(argv[i], "-u") || !strcmp(argv[i], "--uppercase"))
+        {
+            use_caps = TRUE;
         }
         else if (!strcmp(argv[i], "-o") || !strcmp(argv[i], "--offset"))
         {
@@ -237,13 +242,19 @@ int main(int argc, char *argv[])
             }
         }
     }
+
+    char print_offset[32] = "\n[0x%08x] "; // Default offset size
+    if(use_caps)
+    {
+        strncpy_n(print_offset, "\n[0x%08X] ", 11);
+    }
+
     if (!loaded_device)
     {
         fprintf(stderr, "Error: No file specified");
         return 1;
     }
     outbuffer = (LPSTR)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, (5 * bytes_per_line + 32) * sizeof(char)); // Allocate space for the output buffer to improve performance
-
 
     if (is_device && bufsize % 512)
     {
@@ -258,7 +269,7 @@ int main(int argc, char *argv[])
 
     if (offset.QuadPart + bufsize > 0xffffffff)
     {
-        snprintf(print_offset, sizeof(print_offset), "\n[0x%%0%dllx] ", hex_digits(offset.QuadPart + bufsize)); // Increase the offset width
+        snprintf(print_offset, sizeof(print_offset), use_caps ? "\n[0x%%0%dllX] " : "\n[0x%%0%dllx] ", hex_digits(offset.QuadPart + bufsize)); // Increase the offset width
     }
     diskread = CreateFile(device, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);                    // Open file/disk for reading
     if (diskread == INVALID_HANDLE_VALUE || SetFilePointerEx(diskread, offset, NULL, FILE_BEGIN) == (signed)INVALID_SET_FILE_POINTER) // Check for errors & set file offset (if specified)
@@ -299,7 +310,7 @@ int main(int argc, char *argv[])
             substract_optimization = bytes_read - i;
             for (size_t k = 0; k < (((substract_optimization < bytes_per_line)) ? substract_optimization : bytes_per_line); k++)
             {
-                snprintf(outbuffer + strlen(outbuffer), (5 * bytes_per_line + 20) * sizeof(char), "%02x ", buf[i + k]); // Print the bytes
+                snprintf(outbuffer + strlen(outbuffer), (5 * bytes_per_line + 20) * sizeof(char), use_caps ? "%02X " : "%02x " , buf[i + k]); // Print the bytes
             }
             if (substract_optimization < bytes_per_line)
             {
