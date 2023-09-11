@@ -6,7 +6,7 @@
 #include <windows.h>
 #include <math.h> // log()
 
-char diskread_version[] = "3.0";
+char diskread_version[] = "3.2";
 /*
     Variable declarations.
     These variables are declared as global to be accessible from all functions.
@@ -85,7 +85,7 @@ void help()
         " -e, --export <file>      Export to a file\n"
         " -h, --hideoffset         Hide the offset display\n"
         " -o, --offset <offset>    Set a custom starting offset for the file\n"
-        " -s, --size <read size>   Read a specific amount of bytes from the file. 512 bytes are read by default.\n"
+        " -s, --size <read size>   Read a specific amount of bytes from the file. 512 bytes are read by default\n"
         " -u, --uppercase          Display hexadecimal values in uppercase\n"
         " -x, --hexadecimal        Only display the hexadecimal representation\n"
         "\n"
