@@ -4,24 +4,10 @@
 #include <ctype.h>
 #include <stddef.h>
 #include <windows.h>
-#include <math.h> // log()
+#include <math.h>  // log()
+#include <conio.h> // getch()
 
-char diskread_version[] = "3.2";
-/*
-    Variable declarations.
-    These variables are declared as global to be accessible from all functions.
-*/
-DWORD bytes_read = 0;
-FILE *export_;
-/*
-    There's a reason I'm using regular FILE structure with fopen() and fwrite() instead of
-    HANDLE with CreateFile() and WriteFile().
-    As WinAPI functions are more powerful, I wouldn't want anyone to accidentally export the
-    file into the MBR or the boot sector by confusing the arguments.
-
-    So it's a security reason to use FILE structure instead of HANDLE.
-*/
-PUCHAR buf; // Buffer used to read the disk
+char diskread_version[] = "3.3";
 
 LPSTR ErrorMessage(DWORD error)
 {
@@ -78,7 +64,7 @@ void help()
         "DiskRead v%s - Read a disk or a file in raw mode.\n"
         "\n"
         "Usage:\n"
-        " diskread <drive | file> [-b <bytes per line>] [-e <export file>] [-h] [-o <offset>] [-s <read size>] [-u] [-x]\n"
+        " diskread <drive | file> [-b <bytes per line>] [-e <export file>] [-h] [-o <offset>] [-s <read size>] [-u] [-x] [-y]\n"
         "\n"
         "Switches:\n"
         " -b, --bytes <bytecount>  Change the number of bytes per line displayed\n"
@@ -88,6 +74,7 @@ void help()
         " -s, --size <read size>   Read a specific amount of bytes from the file. 512 bytes are read by default\n"
         " -u, --uppercase          Display hexadecimal values in uppercase\n"
         " -x, --hexadecimal        Only display the hexadecimal representation\n"
+        " -y, --yes                Do not prompt for confirmation when exporting to a device file\n"
         "\n"
         "Examples:\n"
         " diskread \\\\.\\PhysicalDrive0 -s 512 -o 0 -e bootsect.bak\n"
@@ -127,15 +114,18 @@ int main(int argc, char *argv[])
 
     BOOLEAN is_device = FALSE, loaded_device = FALSE;
     DWORD bufsize = 512, last_err = 0;
+    DWORD bytes_read = 0, bytes_written = 0;
+
     size_t bytes_per_line = 16, bytes_pl_temp = 0, substract_optimization = 0;
     LPSTR device, export_file, outbuffer;
     LONG strtol_ret = 0;
     LONG64 strtoll_ret = 0;
     LARGE_INTEGER offset = {0}, sector_number = {0};
-    HANDLE diskread = NULL;
+    HANDLE diskread = NULL, export_;
     // Copy arguments to variables
 
-    buf = (PUCHAR)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(PUCHAR) * bufsize);        // Allocate memory for the buffer
+    PUCHAR buf; // Buffer used to read the disk
+
     device = (LPSTR)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(LPSTR) * MAX_PATH);      // Allocate memory for the device name
     export_file = (LPSTR)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(LPSTR) * MAX_PATH); // Allocate memory for the export file name
 
@@ -143,7 +133,7 @@ int main(int argc, char *argv[])
     BOOLEAN export_mode = FALSE;
     BOOLEAN use_caps = FALSE;
     BOOLEAN only_hex = FALSE;
-
+    BOOLEAN confirm_write = FALSE;
     for (int i = 1; i < argc; i++)
     {
         if (!strcmp(argv[i], "-e") || !strcmp(argv[i], "--export"))
@@ -152,15 +142,16 @@ int main(int argc, char *argv[])
             {
                 if (export_mode)
                 {
-                    fprintf(stderr, "Error: Already exporting to file '%s'\n", export_file);
+                    fprintf(stderr, "Error: Already exporting to file '%s'.\n", export_file);
                     return 1;
                 }
                 strncpy_n(export_file, argv[i + 1], MAX_PATH);
-                export_ = fopen(export_file, "wb");
-                if (!export_)
+
+                export_ = CreateFile(export_file, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_DELETE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL); // Try to create a handle for creating a new file
+                if (export_ == INVALID_HANDLE_VALUE && (export_ = CreateFile(export_file, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_DELETE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL)) == INVALID_HANDLE_VALUE) // If the handle cannot be created, for example in the case of a drive, try to open it
                 {
                     last_err = GetLastError();
-                    fprintf(stderr, "Error: %s (0x%lx)\n", ErrorMessage(last_err), last_err);
+                    fprintf(stderr, "Error: Cannot export to file '%s': %s (0x%lx)\n", export_file, (last_err), last_err); // No option succeeded, throw an error message and leave
                     return -last_err;
                 }
                 export_mode = TRUE;
@@ -182,6 +173,10 @@ int main(int argc, char *argv[])
         else if (!strcmp(argv[i], "-x") || !strcmp(argv[i], "--hexadecimal"))
         {
             only_hex = TRUE;
+        }
+        else if (!strcmp(argv[i], "-y") || !strcmp(argv[i], "--yes"))
+        {
+            confirm_write = TRUE;
         }
         else if (!strcmp(argv[i], "-o") || !strcmp(argv[i], "--offset"))
         {
@@ -251,6 +246,7 @@ int main(int argc, char *argv[])
             }
         }
     }
+    buf = (PUCHAR)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(PUCHAR) * bufsize); // Allocate memory for the buffer
 
     char print_offset[32] = "\n[0x%08x] "; // Default offset size
     if (use_caps)
@@ -284,7 +280,7 @@ int main(int argc, char *argv[])
     if (diskread == INVALID_HANDLE_VALUE || SetFilePointerEx(diskread, offset, NULL, FILE_BEGIN) == (signed)INVALID_SET_FILE_POINTER) // Check for errors & set file offset (if specified)
     {
         last_err = GetLastError();
-        fprintf(stderr, "Error: %s (0x%lx)\n", ErrorMessage(last_err), last_err);
+        fprintf(stderr, "Error: Cannot open the file '%s' to the desired position (%llu): %s (0x%lx)\n", device, offset.QuadPart, ErrorMessage(last_err), last_err);
         return -last_err;
     }
     fprintf(stderr, "Trying to read %lu bytes from '%s'...", bufsize, device);
@@ -347,17 +343,30 @@ int main(int argc, char *argv[])
     }
     if (export_mode)
     {
-        putchar('\n');                                                             // If the output is written to stdout (con) print a newline to avoid mixing outputs.
-        if (fwrite(buf, bufsize, sizeof(char), export_) && fclose(export_) != EOF) // If exporting, write and close the file
+        if (GetFileAttributes(export_file) & FILE_ATTRIBUTE_DEVICE && !confirm_write)
         {
-            printf("%lu bytes of '%s' exported successfully into '%s'.\n", bytes_read, device, export_file);
+            fprintf(stderr, "\nWARNING: The write operation you are about to perform to a device file can cause serious data loss!\n"
+                            "         The creator is not responsible for any damages. Continue only if you know what you are doing.\n"
+                            "Proceed with the write operation? (y/n)\n"
+            );
+            if (tolower(getche()) != 'y')
+            {
+                CloseHandle(diskread);
+                CloseHandle(export_);
+                return bytes_read;
+            }
+        }
+        if (WriteFile(export_, buf, bufsize, &bytes_written, NULL)) // If exporting, write and close the file
+        {
+            printf("\n%lu bytes of '%s' written successfully into '%s'.\n", bytes_written, device, export_file);
         }
         else
         {
-            fprintf(stderr, "Failed to write the file %s: %s (0x%lx)\n", export_file, ErrorMessage(last_err), last_err);
+            fprintf(stderr, "\nFailed to write the file %s: %s (0x%lx)\n", export_file, ErrorMessage(last_err), last_err);
         }
     }
 
     CloseHandle(diskread);
+    CloseHandle(export_);
     return bytes_read;
 }
