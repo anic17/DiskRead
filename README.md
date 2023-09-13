@@ -39,7 +39,7 @@ DiskRead is a program that allows you to read raw chunks of a disk or a file. It
 
  > [!WARNING]
  > Writing to a boot sector or MBR can cause serious data loss and may leave your computer unbootable if done incorrectly.
- > Using the option `-y` to avoid the warning message when writing to a device is strongly unrecommended unless in a script. 
+ > Using the option `-y` to avoid the warning message when writing to a device is strongly discouraged unless in a script. 
 
  `diskread file.txt -s 40 -o 10 -h`  
  Prints 40 bytes from file.txt, starting to read at the 10th byte without displaying the offset.
