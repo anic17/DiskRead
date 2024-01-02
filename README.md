@@ -2,7 +2,7 @@
 
 ## What is DiskRead?
 
-DiskRead is a program that allows you to read raw chunks of a disk or a file. It aims to be the replacement of `xxd` or `hexdump` present on Linux, but for Windows. Furthermore, the low level WinAPI functions it uses make DiskRead able to access anything, including boot sectors and disks.
+DiskRead is a program that allows you to read raw chunks of a disk or a file. It aims to be the replacement of `xxd` or `hexdump` present on Linux, but for Windows. Furthermore, the low level WinAPI functions enable DiskRead to DiskRead access any file, including boot sectors and disks.
 
 ## Usage
  `diskread <drive | file> [-b <bytes per line>] [-e <export file>] [-h] [-o <offset>] [-s <read size>] [-u] [-x] [-y]`
@@ -39,7 +39,7 @@ DiskRead is a program that allows you to read raw chunks of a disk or a file. It
 
  > [!WARNING]
  > Writing to a boot sector or MBR can cause serious data loss and may leave your computer unbootable if done incorrectly.
- > Using the option `-y` to avoid the warning message when writing to a device is strongly discouraged unless in a script. 
+ > Using the option `-y` to avoid the warning message when writing to a device is strongly discouraged outside of a script. 
 
  `diskread file.txt -s 40 -o 10 -h`  
  Prints 40 bytes from file.txt, starting to read at the 10th byte without displaying the offset.
@@ -55,7 +55,7 @@ Prints only 512 bytes of image.png in uppercase hexadecimal, displaying 12 bytes
 
 ## Why use DiskRead?
 
-DiskRead is a tiny and fast program, yet powerful, portable, and easy to use. It's the perfect tool for backing up the boot sector, viewing the raw data of files and disks, or using it as a hexadecimal dump tool for Windows, ranging from the old Windows XP to the latest version, Windows 11.
+DiskRead is a tiny and fast program, yet powerful, portable, and easy to use. It's the perfect tool for backing up the boot sector, viewing the raw data of files and disks, or using it as a hexadecimal dumping tool for Windows, ranging from the old Windows XP to the latest version, Windows 11.
 
 ## Contributing
 
