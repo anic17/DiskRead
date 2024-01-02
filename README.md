@@ -50,7 +50,7 @@ Prints only 512 bytes of image.png in uppercase hexadecimal, displaying 12 bytes
 ### Return code
  On success, the number of bytes read is returned, or a negative error value on failure.
 
-> **Note**  
+> [!NOTE]
 > Due to Windows limitations, both disk reading and disk offset are performed in chunks of 512 bytes. Values will be rounded up to the nearest multiple of 512.
 
 ## Why use DiskRead?
