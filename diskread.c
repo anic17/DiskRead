@@ -7,9 +7,9 @@
 #include <math.h>  // log()
 #include <conio.h> // getch()
 
-char diskread_version[] = "3.3";
+char diskread_version[] = "3.4";
 
-LPSTR ErrorMessage(DWORD error)
+LPSTR error_message(DWORD error)
 {
     LPSTR lpMsgBuf;
     FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&lpMsgBuf, 0, NULL);
@@ -89,12 +89,12 @@ void help()
         "Return code:\n"
         " On success, the number of bytes read is returned, or a negative error value on failure.\n"
         "\n"
-        "DiskRead can be used for hexadecimal dumping and as a boot sector backup tool.\n"
+        "DiskRead is a versatile tool that can be used for hexadecimal dumping and backing up boot sectors.\n"
         "\n"
         "Note: Due to Windows limitations, both disk reading and disk offset are performed in chunks of 512 bytes.\n"
         "      Values will be rounded up to the nearest multiple of 512.\n"
         "\n"
-        "Copyright (c) 2023 anic17 Software\n",
+        "Copyright (c) 2024 anic17 Software\n",
         diskread_version);
 }
 
@@ -151,7 +151,7 @@ int main(int argc, char *argv[])
                 if (export_ == INVALID_HANDLE_VALUE && (export_ = CreateFile(export_file, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_DELETE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL)) == INVALID_HANDLE_VALUE) // If the handle cannot be created, for example in the case of a drive, try to open it
                 {
                     last_err = GetLastError();
-                    fprintf(stderr, "Error: Cannot export to file '%s': %s (0x%lx)\n", export_file, (last_err), last_err); // No option succeeded, throw an error message and leave
+                    fprintf(stderr, "Error: Cannot export to file '%s': %s (0x%lx)\n", export_file, error_message(last_err), last_err); // No option succeeded, throw an error message and leave
                     return -last_err;
                 }
                 export_mode = TRUE;
@@ -280,7 +280,7 @@ int main(int argc, char *argv[])
     if (diskread == INVALID_HANDLE_VALUE || SetFilePointerEx(diskread, offset, NULL, FILE_BEGIN) == (signed)INVALID_SET_FILE_POINTER) // Check for errors & set file offset (if specified)
     {
         last_err = GetLastError();
-        fprintf(stderr, "Error: Cannot open the file '%s' to the desired position (%llu): %s (0x%lx)\n", device, offset.QuadPart, ErrorMessage(last_err), last_err);
+        fprintf(stderr, "Error: Cannot open the file '%s' to the desired position (%llu): %s (0x%lx)\n", device, offset.QuadPart, error_message(last_err), last_err);
         return -last_err;
     }
     fprintf(stderr, "Trying to read %lu bytes from '%s'...", bufsize, device);
@@ -338,7 +338,7 @@ int main(int argc, char *argv[])
     else
     {
         last_err = GetLastError();
-        fprintf(stderr, "\nFailed to read %lu bytes: %s (0x%lx)\n", bufsize, ErrorMessage(last_err), last_err);
+        fprintf(stderr, "\nFailed to read %lu bytes: %s (0x%lx)\n", bufsize, error_message(last_err), last_err);
         return last_err;
     }
     if (export_mode)
@@ -362,7 +362,7 @@ int main(int argc, char *argv[])
         }
         else
         {
-            fprintf(stderr, "\nFailed to write the file %s: %s (0x%lx)\n", export_file, ErrorMessage(last_err), last_err);
+            fprintf(stderr, "\nFailed to write the file %s: %s (0x%lx)\n", export_file, error_message(last_err), last_err);
         }
     }
 
