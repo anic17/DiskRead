@@ -2,7 +2,7 @@
 
 ## What is DiskRead?
 
-DiskRead is a program that allows you to read raw chunks of a disk or a file. It aims to be the replacement of `xxd` or `hexdump` present on Linux, but for Windows. Furthermore, the low level WinAPI functions enable DiskRead to DiskRead access any file, including boot sectors and disks.
+DiskRead is a program that allows you to read raw chunks of a disk or a file. It aims to replace `xxd` or `hexdump` present on Linux, but for Windows. Furthermore, the low level WinAPI functions enable DiskRead to access any file, including boot sectors and disks.
 
 ## Usage
  `diskread <drive | file> [-b <bytes per line>] [-e <export file>] [-h] [-o <offset>] [-s <read size>] [-u] [-x] [-y]`
