@@ -2,7 +2,7 @@
 
 ## What is DiskRead?
 
-DiskRead is a program that allows you to read raw chunks of a disk or a file. It aims to replace `xxd` or `hexdump` present on Linux, but for Windows. Furthermore, the low level WinAPI functions enable DiskRead to access any file, including boot sectors and disks.
+DiskRead is a program that allows you to read raw chunks of a disk or a file. It aims to replace `xxd` or `hexdump` present on Linux, but for Windows. Furthermore, the low level WinAPI functions enable DiskRead to DiskRead access any file, including boot sectors and disks.
 
 ## Usage
  `diskread <drive | file> [-b <bytes per line>] [-e <export file>] [-h] [-o <offset>] [-s <read size>] [-u] [-x] [-y]`
@@ -48,7 +48,7 @@ DiskRead is a program that allows you to read raw chunks of a disk or a file. It
 Prints only 512 bytes of image.png in uppercase hexadecimal, displaying 12 bytes per line.
 
 ### Return code
- On success, the number of bytes read is returned, or a negative error value on failure.
+ The number of bytes read is returned on success, or a negative error value on failure.
 
 > [!NOTE]
 > Due to Windows limitations, both disk reading and disk offset are performed in chunks of 512 bytes. Values will be rounded up to the nearest multiple of 512.
@@ -59,7 +59,7 @@ DiskRead is a tiny and fast program, yet powerful, portable, and easy to use. It
 
 ## Contributing
 
-If you found a bug or want to add a new feature, don't hesitate to create a [pull request](https://github.com/anic17/DiskRead/pulls) or an [issue](https://github.com/anic17/DiskRead/issues)! Contributions are greatly appreciated.
+If you found a bug or want to add a new feature, don't hesitate to create a [pull request](https://github.com/anic17/DiskRead/pulls) or an [issue](https://github.com/anic17/DiskRead/issues)! I would greatly appreciate your contributions.
 
 ## Article
 
