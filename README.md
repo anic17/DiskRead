@@ -37,7 +37,7 @@ DiskRead is a program that allows you to read raw chunks of a disk or a file. It
  Reads the first 512 bytes from physical drive 0 and writes them to `bootsect.bak` (a boot sector backup).
  The boot sector can be restored if needed using `diskread bootsect.bak -s 512 -o 0 -e \\.\PhysicalDrive0`.
 
- > [!WARNING]
+ > [!CAUTION]
  > Writing to a boot sector or MBR can cause serious data loss and may leave your computer unbootable if done incorrectly.
  > Using the option `-y` to avoid the warning message when writing to a device is strongly discouraged outside of a script. 
 
