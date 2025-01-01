@@ -65,6 +65,6 @@ If you found a bug or want to add a new feature, don't hesitate to create a [pul
 
 Here's an <a href="https://batch-man.com/diskread-read-raw-chunks-of-a-disk-or-a-file/">article</a> written on <a href="https://batch-man.com">Batch-Man</a> by me explaining more in-depth an older version of DiskRead.
 
-**Copyright &copy; 2024 anic17 Software**
+**Copyright &copy; 2025 anic17 Software**
 
 <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fanic17%2FDiskRead&count_bg=%23FFFFFF&title_bg=%23FFFFFF&icon=&icon_color=%23FFFFFF&title=hits&edge_flat=false" height=0 width=0>
