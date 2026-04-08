@@ -70,25 +70,8 @@
           /></a>
         </div>
         <br />
-        DiskRead aims to replace <code>xxd</code> or <code>hexdump</code> present on Linux, but for Windows. Furthermore, the low-level WinAPI functions enable DiskRead to access any file, including boot sectors and disks, both for reading and writing.
+        DiskRead aims to replace <code>xxd</code> or <code>hexdump</code> present on Linux, but for Windows. Furthermore, the low-level WinAPI functions enable DiskRead to access any file, including boot sectors and disks, both for reading and writing. By operating at the sector level, it allows developers and system administrators to inspect raw data structures, perform low-level backups, and analyze filesystem corruption directly from the command line without interference from the operating system's standard file locks.
         <br />
-        <br />
-        <hr />
-        <br />
-
-        <h2 class="headers">Screenshot</h2>
-        <br />
-        <div align="center">
-          <img
-            src="https://raw.githubusercontent.com/anic17/DiskRead/main/screenshot_placeholder.png"
-            alt="Screenshot of DiskRead"
-            style="max-width: 100%; border-radius: 5px"
-          />
-          <br /><br />
-          <strong
-            >Screenshot of DiskRead in action</strong
-          >
-        </div>
         <br />
         <hr />
         <br />
@@ -162,21 +145,13 @@
           </li>
         </ul>
         <br />
-        <div class="description" style="padding: 10px; background-color: #ffe6e6; border-left: 4px solid #ff4d4d; color: #cc0000; font-size: 0.9em;">
-          <strong>CAUTION:</strong> Writing to a boot sector or MBR can cause serious data loss and may leave your computer unbootable if done incorrectly. Using the option <code>-y</code> to avoid the warning message when writing to a device is strongly discouraged outside of a script.
-        </div>
-        <br />
-        <div class="description" style="padding: 10px; background-color: #e6f2ff; border-left: 4px solid #3399ff; font-size: 0.9em;">
-          <strong>NOTE:</strong> Due to Windows limitations, both disk reading and disk offset are performed in chunks of 512 bytes. Values will be rounded up to the nearest multiple of 512.
-        </div>
-        <br />
         <hr />
         <br />
 
         <h2 class="headers">Why use DiskRead?</h2>
         <br />
         <div class="description">
-          DiskRead is a tiny and fast program, yet powerful, portable, and easy to use. It's the perfect tool for backing up the boot sector, viewing the raw data of files and disks, or using it as a hexadecimal dumping tool for Windows.
+          DiskRead is a tiny and fast program, yet powerful, portable, and easy to use. It's the perfect tool for backing up the boot sector, viewing the raw data of files and disks, or using it as a hexadecimal dumping tool for Windows. Unlike graphical hex editors that may struggle with massive drives or require installation, DiskRead operates seamlessly in constrained environments and batch scripts. It bridges the gap for users who need a robust, native WinAPI solution for inspecting system internals or recovering overwritten sector data.
         </div>
         <br />
         <hr />
@@ -194,7 +169,8 @@
         <h2 class="headers">Article</h2>
         <br />
         <div class="description">
-          Here's an <a href="https://batch-man.com/diskread-read-raw-chunks-of-a-disk-or-a-file/">article</a> written on <a href="https://batch-man.com">Batch-Man</a> explaining more in-depth an older version of DiskRead.
+          If you want to dive deeper into the history and technical details of the project, some time ago I wrote an article on <a href="https://batch-man.com">Batch-Man</a> explaining an older version of DiskRead in-depth. 
+          Read the <a class="increase" href="https://batch-man.com/diskread-read-raw-chunks-of-a-disk-or-a-file/">article here</a>.
         </div>
         <br />
         <hr />
@@ -211,8 +187,7 @@
       </div>
       <footer>
         <span id="footer">
-          <!-- Empty placeholder for loading it dynamically-->
-        </span>
+          </span>
         <span id="copyright"></span>
       </footer>
     </div>
